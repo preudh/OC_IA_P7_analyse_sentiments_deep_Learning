@@ -1,0 +1,7 @@
+Pour lancer l'API avec FastAPI en local, utilisez la commande suivante dans votre terminal :
+uvicorn api.main:app --host 127.0.0.1 --port 8000 --reload
+
+Essais de l'API avec un texte en anglais simple :
+{
+    "text": "This is a great day!"
+}
