@@ -1,20 +1,13 @@
 ### AzureFunctions template
-# Azure Functions localsettings file
 local.settings.json
 
 ### JupyterNotebooks template
-# gitignore template for Jupyter Notebooks
-# website: http://jupyter.org/
-
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
 
 # IPython
 profile_default/
 ipython_config.py
-
-# Remove previous ipynb_checkpoints
-#   git rm -r .ipynb_checkpoints/
 
 ### Flask template
 instance/*
@@ -35,8 +28,24 @@ __pycache__/
 *.db-shm
 *.db-wal
 
-# Données de sauvegarde dans le dossier data
-data/
-
-# Fichier pycharm project à ne pas versionner
+# Exclure les fichiers PyCharm et configurations locales
 .idea/
+*.iml
+
+# Exclure les données volumineuses dans le dossier data sauf si elles sont nécessaires
+data/*.csv
+data/*.bin
+
+# Ignorer les fichiers logs
+logs/
+*.log
+
+# Exclure tous les fichiers du dossier models sauf les fichiers nécessaires pour l'API
+models/*
+!models/tv_layer_config.json
+!models/best_model_fasttext.keras
+!models/tv_layer_vocabulary.txt
+
+# Exclure les notebooks pour alléger le dépôt
+notebooks/
+

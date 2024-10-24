@@ -1,0 +1,15 @@
+# Exclure les fichiers et dossiers inutiles pour l'image Docker
+.git
+.github
+.gitignore
+*.pyc
+__pycache__
+notebooks/
+# Ignorer le dossier mlruns local
+mlruns/
+data/
+README.md
+*.ipynb
+
+# Ignorer les fichiers pour le modèle glove
+models/best_model_glove.keras

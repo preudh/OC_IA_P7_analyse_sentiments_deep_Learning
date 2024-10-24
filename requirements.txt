@@ -1,0 +1,7 @@
+tensorflow==2.17.0
+numpy==1.26.4
+uvicorn==0.32.0
+fastapi==0.115.3
+pydantic==2.9.2
+starlette==0.41.0
+pytest==8.3.3
