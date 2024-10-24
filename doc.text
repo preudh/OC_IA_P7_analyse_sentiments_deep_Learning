@@ -1,7 +1,28 @@
 Pour lancer l'API avec FastAPI en local, utilisez la commande suivante dans votre terminal :
 uvicorn api.main:app --host 127.0.0.1 --port 8000 --reload
 
-Essais de l'API avec un texte en anglais simple :
+1.Essais de l'API avec un texte en anglais simple, endpoint/predict :
 {
     "text": "This is a great day!"
 }
+
+2.Feedback de l'API à écrire dans le fichier feedback.json, endpoint/feedback :
+{
+    "text": "This is a great day!",
+    "prediction": "positive",
+    "validation": "true"
+}
+{
+    "text": "This is a great day!",
+    "prediction": "positive",
+    "validation": "true"
+}
+
+Server response code 200 (fait par l'api) :
+{
+  "message": "Feedback reçu, merci !"
+}
+
+2. Lancer les tests unitaires avec pytest en local :
+
+pytest api/test_api.py

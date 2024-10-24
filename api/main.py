@@ -1,55 +1,3 @@
-# from fastapi import FastAPI, HTTPException
-# import tensorflow as tf
-# from pydantic import BaseModel
-# import numpy as np
-# import uvicorn
-# import webbrowser
-#
-# # Charger le modèle
-# model = tf.keras.models.load_model('models/best_model_fasttext.keras')  # Adapter le chemin si nécessaire
-#
-# # Définir le nombre de mots et la longueur maximale des séquences
-# num_words = 10000
-# max_sequence_length = 100
-#
-# # Initialiser la couche TextVectorization
-# tv_layer = tf.keras.layers.TextVectorization(
-#     max_tokens=num_words,
-#     output_mode='int',
-#     output_sequence_length=max_sequence_length
-# )
-#
-# # Adapter la couche tv_layer en utilisant un exemple ou un ensemble de données textuelles préalablement utilisées
-# # Utilisez les données textuelles que vous avez utilisées lors de l'entraînement du modèle
-# # Exemple: tv_layer.adapt(data['clean_text_embeddings'])
-# # Remplacez par un jeu de données approprié si nécessaire
-#
-# # Initialiser l'API
-# app = FastAPI()
-#
-# # Définir la classe d'entrée pour les prédictions
-# class TextInput(BaseModel):
-#     text: str
-#
-# # Définir l'endpoint pour les prédictions
-# @app.post("/predict")
-# async def predict(input: TextInput):
-#     try:
-#         # Vectoriser le texte en utilisant tv_layer
-#         sequences = tv_layer([input.text])
-#         # Faire la prédiction
-#         prediction = model.predict(sequences)
-#         return {"prediction": "positive" if prediction[0][0] > 0.5 else "negative"}
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=str(e))
-#
-#
-# # Lancer l'API en local si ce script est exécuté directement
-# if __name__ == "__main__":
-#     # Ouvrir la documentation directement dans le navigateur
-#     webbrowser.open("http://127.0.0.1:8000/docs")
-#     uvicorn.run("api.main:app", host="127.0.0.1", port=8000, reload=True)
-
 from fastapi import FastAPI, HTTPException
 import tensorflow as tf
 from pydantic import BaseModel
@@ -57,6 +5,7 @@ import numpy as np
 import uvicorn
 import webbrowser
 import json
+from starlette.responses import RedirectResponse
 
 # Charger le modèle
 model = tf.keras.models.load_model('models/best_model_fasttext.keras')  # Adapter le chemin si nécessaire
@@ -78,9 +27,19 @@ tv_layer.set_vocabulary(vocabulary)
 # Initialiser l'API
 app = FastAPI()
 
-# Définir la classe d'entrée pour les prédictions
+# Rediriger la racine vers /docs
+@app.get("/", include_in_schema=False)  # include_in_schema=False pour cacher cette route de la documentation
+async def redirect_to_docs():
+    return RedirectResponse(url='/docs')
+
+# Définir les classes d'entrée pour les prédictions et la validation
 class TextInput(BaseModel):
     text: str
+
+class FeedbackInput(BaseModel):
+    text: str
+    prediction: str
+    validation: bool
 
 # Définir l'endpoint pour les prédictions
 @app.post("/predict")
@@ -90,13 +49,26 @@ async def predict(input: TextInput):
         sequences = tv_layer([input.text])
         # Faire la prédiction
         prediction = model.predict(sequences)
-        return {"prediction": "positive" if prediction[0][0] > 0.5 else "negative"}
+        sentiment = "positive" if prediction[0][0] > 0.5 else "negative"
+        return {"prediction": sentiment}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# Définir l'endpoint pour recevoir la validation de l'utilisateur
+@app.post("/feedback")
+async def feedback(input: FeedbackInput):
+    try:
+        # Traiter le retour de l'utilisateur
+        if not input.validation:
+            # Par exemple, envoyer une trace à Application Insights ou loguer localement
+            print(f"Feedback négatif reçu : {input.text}, Prédiction : {input.prediction}")
+        return {"message": "Feedback reçu, merci !"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 # Lancer l'API en local si ce script est exécuté directement
 if __name__ == "__main__":
     # Ouvrir la documentation directement dans le navigateur
     webbrowser.open("http://127.0.0.1:8000/docs")
-    uvicorn.run("api.main:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+
