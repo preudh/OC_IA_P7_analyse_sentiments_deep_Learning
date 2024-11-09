@@ -1,16 +1,3 @@
-#version: '3.11'
-#
-#services:
-#  app:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    volumes:
-#      - ./models:/app/models
-#    environment:
-#      - ENVIRONMENT=test
-#    command: pytest api/test_api.py
-
 version: '3.11'
 
 services:
@@ -19,7 +6,10 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - .:/app  # Monter tout le projet
+      - ./models:/app/models  # Monte le dossier "models" dans /app/models
     environment:
       - ENVIRONMENT=test
     command: pytest api/test_api.py
+
+
+
