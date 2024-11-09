@@ -17,16 +17,35 @@ model_path = os.path.join(os.path.dirname(__file__), 'models', 'best_model_fastt
 # Charger le modèle
 model = tf.keras.models.load_model(model_path)
 
+# # Charger la configuration de TextVectorization
+# with open("models/tv_layer_config.json", "r") as file:
+#     tv_layer_config = json.load(file)
+
 # Charger la configuration de TextVectorization
-with open("models/tv_layer_config.json", "r") as file:
+config_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'tv_layer_config.json')
+with open(config_path, "r") as file:
     tv_layer_config = json.load(file)
+
+
+
 
 # Créer la couche TextVectorization avec la configuration chargée
 tv_layer = tf.keras.layers.TextVectorization.from_config(tv_layer_config)
 
 # Charger le vocabulaire
-with open("models/tv_layer_vocabulary.txt", "r", encoding="utf-8") as vocab_file:
+# with open("models/tv_layer_vocabulary.txt", "r", encoding="utf-8") as vocab_file:
+#     vocabulary = [line.strip() for line in vocab_file]
+
+
+# Chemin relatif pour le vocabulaire
+vocab_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'tv_layer_vocabulary.txt')
+
+# Charger le vocabulaire
+with open(vocab_path, "r", encoding="utf-8") as vocab_file:
     vocabulary = [line.strip() for line in vocab_file]
+
+
+
 
 # Adapter le vocabulaire à la couche TextVectorization
 tv_layer.set_vocabulary(vocabulary)
