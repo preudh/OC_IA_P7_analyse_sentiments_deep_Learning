@@ -20,7 +20,7 @@ jobs:
 
       - name: Run Tests
         run: |
-          docker-compose -f docker-compose.ci.yml up --abort-on-container-exit
+          docker-compose -f docker-compose.ci.yml up --build --exit-code-from app
 
   deploy:
     runs-on: ubuntu-latest
