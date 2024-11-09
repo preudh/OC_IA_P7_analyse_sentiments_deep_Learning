@@ -1,0 +1,14 @@
+version: '3.11'
+services:
+  app:
+    image: <AZURE_REGISTRY>.azurecr.io/my-app:latest
+    ports:
+      - "80:80"
+    environment:
+      - ENVIRONMENT=production
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "512M"
+    command: uvicorn api.main:app --host 0.0.0.0 --port 80

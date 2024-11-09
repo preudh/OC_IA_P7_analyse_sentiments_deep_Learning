@@ -1,0 +1,9 @@
+version: '3.11'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ENVIRONMENT=test
+    command: pytest api/test_api.py
