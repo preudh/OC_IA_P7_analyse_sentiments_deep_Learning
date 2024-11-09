@@ -6,9 +6,16 @@ import uvicorn
 import webbrowser
 import json
 from starlette.responses import RedirectResponse
+import os
 
 # Charger le modèle
-model = tf.keras.models.load_model('models/best_model_fasttext.keras')  # Adapter le chemin si nécessaire
+# model = tf.keras.models.load_model('models/best_model_fasttext.keras')  # Adapter le chemin si nécessaire
+
+# Construire un chemin relatif basé sur le répertoire actuel
+model_path = os.path.join(os.path.dirname(__file__), 'models', 'best_model_fasttext.keras')
+
+# Charger le modèle
+model = tf.keras.models.load_model(model_path)
 
 # Charger la configuration de TextVectorization
 with open("models/tv_layer_config.json", "r") as file:
