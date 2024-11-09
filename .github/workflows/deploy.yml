@@ -12,9 +12,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
       - name: Run Tests
         run: |
           docker-compose -f docker-compose.ci.yml up --build --exit-code-from app
+
 
   deploy:
     runs-on: ubuntu-latest
