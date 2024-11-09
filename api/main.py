@@ -12,7 +12,12 @@ import os
 # model = tf.keras.models.load_model('models/best_model_fasttext.keras')  # Adapter le chemin si nécessaire
 
 # Construire un chemin relatif basé sur le répertoire actuel
-model_path = os.path.join(os.path.dirname(__file__), 'models', 'best_model_fasttext.keras')
+# model_path = os.path.join(os.path.dirname(__file__), 'models', 'best_model_fasttext.keras')
+
+# Chemin absolu vers le modèle
+model_path = os.path.join("/app", "models", "best_model_fasttext.keras")
+
+
 
 # Charger le modèle
 model = tf.keras.models.load_model(model_path)
@@ -21,8 +26,12 @@ model = tf.keras.models.load_model(model_path)
 # with open("models/tv_layer_config.json", "r") as file:
 #     tv_layer_config = json.load(file)
 
-# Charger la configuration de TextVectorization
-config_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'tv_layer_config.json')
+
+import os
+import json
+
+# Chemin absolu pour le fichier de configuration du TextVectorization
+config_path = os.path.join("/app", "models", "tv_layer_config.json")
 with open(config_path, "r") as file:
     tv_layer_config = json.load(file)
 
@@ -36,9 +45,20 @@ tv_layer = tf.keras.layers.TextVectorization.from_config(tv_layer_config)
 # with open("models/tv_layer_vocabulary.txt", "r", encoding="utf-8") as vocab_file:
 #     vocabulary = [line.strip() for line in vocab_file]
 
+# Chemin absolu pour le fichier de vocabulaire
+vocab_path = os.path.join("/app", "models", "tv_layer_vocabulary.txt")
+with open(vocab_path, "r", encoding="utf-8") as vocab_file:
+    vocabulary = [line.strip() for line in vocab_file]
+
+
+
 
 # Chemin relatif pour le vocabulaire
 vocab_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'tv_layer_vocabulary.txt')
+
+
+
+
 
 # Charger le vocabulaire
 with open(vocab_path, "r", encoding="utf-8") as vocab_file:
