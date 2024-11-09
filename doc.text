@@ -1,6 +1,15 @@
+Pour Docker desktop, il faut installer Docker desktop sur votre machine.
+
+**Utilisation de Docker desktop pour le dev en local**
+docker-compose -f docker-compose.dev.yml down
+docker-compose -f docker-compose.dev.yml build --no-cache
+docker-compose -f docker-compose.dev.yml up -d
+
+**Utilisation de Docker desktop**
 Pour lancer l'API avec FastAPI en local, utilisez la commande suivante dans votre terminal :
 uvicorn api.main:app --host 127.0.0.1 --port 8000 --reload
 
+**Utilisation de Docker desktop**
 1.Essais de l'API avec un texte en anglais simple, endpoint/predict :
 {
     "text": "This is a great day!"
@@ -23,6 +32,6 @@ Server response code 200 (fait par l'api) :
   "message": "Feedback reçu, merci !"
 }
 
-2. Lancer les tests unitaires avec pytest en local :
-
+**Lancer les tests unitaires avec pytest en local**
+commande à executer dans le terminal de votre IDE :
 pytest api/test_api.py

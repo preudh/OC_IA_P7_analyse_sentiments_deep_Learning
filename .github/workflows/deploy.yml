@@ -8,11 +8,14 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
+
       - name: Run Tests
         run: |
           docker-compose -f docker-compose.ci.yml up --abort-on-container-exit
