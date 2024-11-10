@@ -46,6 +46,10 @@ models/*
 !models/best_model_fasttext.keras
 !models/tv_layer_vocabulary.txt
 
+# Assurez-vous que le dossier models est inclus même s'il est vide
+!models/.gitkeep
+
+
 # Exclure les notebooks pour alléger le dépôt
 notebooks/
 
