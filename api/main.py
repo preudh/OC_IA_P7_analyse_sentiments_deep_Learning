@@ -8,77 +8,49 @@ import json
 from starlette.responses import RedirectResponse
 import os
 
-# Charger le modèle
-# model = tf.keras.models.load_model('models/best_model_fasttext.keras')  # Adapter le chemin si nécessaire
+# For GitHub Actions, we need to set the model path to the correct location
+# Determine if running in GitHub Actions
+is_github_actions = os.getenv("GITHUB_ACTIONS") == "true"
 
-# Construire un chemin relatif basé sur le répertoire actuel
-# model_path = os.path.join(os.path.dirname(__file__), 'models', 'best_model_fasttext.keras')
+# Define paths for the model in both zipped and regular formats
+zipped_model_path = os.path.join("/app", "models", "best_model_fasttext.keras.zip")
+regular_model_path = os.path.join("/app", "models", "best_model_fasttext.keras")
 
-# Chemin absolu vers le modèle
-model_path = os.path.join("/app", "models", "best_model_fasttext.keras")
+# Load the model based on the available format
+if os.path.exists(zipped_model_path):
+    print("Loading model from zipped format...")
+    model = tf.keras.models.load_model(zipped_model_path)
+elif os.path.exists(regular_model_path):
+    print("Loading model from regular format...")
+    model = tf.keras.models.load_model(regular_model_path)
+else:
+    raise FileNotFoundError("Model file not found. Ensure the model is saved in the correct format.")
 
-
-
-# Charger le modèle
-model = tf.keras.models.load_model(model_path)
-
-# # Charger la configuration de TextVectorization
-# with open("models/tv_layer_config.json", "r") as file:
-#     tv_layer_config = json.load(file)
-
-
-import os
-import json
-
-# Chemin absolu pour le fichier de configuration du TextVectorization
+# Load TextVectorization configuration
 config_path = os.path.join("/app", "models", "tv_layer_config.json")
 with open(config_path, "r") as file:
     tv_layer_config = json.load(file)
 
-
-
-
-# Créer la couche TextVectorization avec la configuration chargée
+# Create the TextVectorization layer using the loaded configuration
 tv_layer = tf.keras.layers.TextVectorization.from_config(tv_layer_config)
 
-# Charger le vocabulaire
-# with open("models/tv_layer_vocabulary.txt", "r", encoding="utf-8") as vocab_file:
-#     vocabulary = [line.strip() for line in vocab_file]
-
-# Chemin absolu pour le fichier de vocabulaire
+# Load vocabulary for TextVectorization layer
 vocab_path = os.path.join("/app", "models", "tv_layer_vocabulary.txt")
 with open(vocab_path, "r", encoding="utf-8") as vocab_file:
     vocabulary = [line.strip() for line in vocab_file]
 
-
-
-
-# Chemin relatif pour le vocabulaire
-vocab_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'tv_layer_vocabulary.txt')
-
-
-
-
-
-# Charger le vocabulaire
-with open(vocab_path, "r", encoding="utf-8") as vocab_file:
-    vocabulary = [line.strip() for line in vocab_file]
-
-
-
-
-# Adapter le vocabulaire à la couche TextVectorization
+# Set vocabulary in the TextVectorization layer
 tv_layer.set_vocabulary(vocabulary)
 
-# Initialiser l'API
+# Initialize FastAPI application
 app = FastAPI()
 
-# Rediriger la racine vers /docs
-@app.get("/", include_in_schema=False)  # include_in_schema=False pour cacher cette route de la documentation
+# Redirect root to /docs
+@app.get("/", include_in_schema=False)
 async def redirect_to_docs():
     return RedirectResponse(url='/docs')
 
-# Définir les classes d'entrée pour les prédictions et la validation
+# Define input classes for predictions and feedback
 class TextInput(BaseModel):
     text: str
 
@@ -87,34 +59,35 @@ class FeedbackInput(BaseModel):
     prediction: str
     validation: bool
 
-# Définir l'endpoint pour les prédictions
+# Prediction endpoint
 @app.post("/predict")
 async def predict(input: TextInput):
     try:
-        # Vectoriser le texte en utilisant tv_layer
+        # Vectorize the input text
         sequences = tv_layer([input.text])
-        # Faire la prédiction
+        # Predict sentiment
         prediction = model.predict(sequences)
         sentiment = "positive" if prediction[0][0] > 0.5 else "negative"
         return {"prediction": sentiment}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# Définir l'endpoint pour recevoir la validation de l'utilisateur
+# Feedback endpoint
 @app.post("/feedback")
 async def feedback(input: FeedbackInput):
     try:
-        # Traiter le retour de l'utilisateur
+        # Process user feedback
         if not input.validation:
-            # Par exemple, envoyer une trace à Application Insights ou loguer localement
-            print(f"Feedback négatif reçu : {input.text}, Prédiction : {input.prediction}")
-        return {"message": "Feedback reçu, merci !"}
+            # Log or handle negative feedback as needed
+            print(f"Negative feedback received: {input.text}, Prediction: {input.prediction}")
+        return {"message": "Feedback received, thank you!"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# Lancer l'API en local si ce script est exécuté directement
+# Run API locally if the script is executed directly
 if __name__ == "__main__":
-    # Ouvrir la documentation directement dans le navigateur
+    # Open documentation in the browser
     webbrowser.open("http://127.0.0.1:8000/docs")
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+
 

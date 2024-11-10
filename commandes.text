@@ -35,3 +35,15 @@ Server response code 200 (fait par l'api) :
 **Lancer les tests unitaires avec pytest en local**
 commande à executer dans le terminal de votre IDE :
 pytest api/test_api.py
+
+**Githubactions CI avec Docker**
+Ici on crée un conteneur Docker pour l'API FastAPI et on lance les tests unitaires avec pytest.
+creation du fichier .github/workflows/deploy.yml
+creation pipeline CI/CD avec Githubactions
+définir les secrets dans les paramètres du dépôt GitHub. rien à faire pour le moment
+
+**Githubactions CD Azure**
+Ici on crée un conteneur Docker pour l'API FastAPI et on déploie l'API sur Azure.
+creation compte Azure free
+creation du service principal
+définir les secrets dans les paramètres du dépôt GitHub.
