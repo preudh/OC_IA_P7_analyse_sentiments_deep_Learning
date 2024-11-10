@@ -21,7 +21,7 @@ def test_feedback_positive():
         "validation": True
     })
     assert response.status_code == 200
-    assert response.json() == {"message": "Feedback reçu, merci !"}
+    assert response.json() == {"message": "Feedback received, thank you!"}
 
 def test_feedback_negative():
     response = client.post("/feedback", json={
@@ -30,5 +30,6 @@ def test_feedback_negative():
         "validation": False
     })
     assert response.status_code == 200
-    assert response.json() == {"message": "Feedback reçu, merci !"}
+    assert response.json() == {"message": "Feedback received, thank you!"}
+
 
