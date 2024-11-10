@@ -40,11 +40,7 @@ data/*.bin
 logs/
 *.log
 
-# Exclure tous les fichiers du dossier models sauf les fichiers nécessaires pour l'API
-models/*
-!models/tv_layer_config.json
-!models/best_model_fasttext.keras
-!models/tv_layer_vocabulary.txt
+# on garde tous les fichiers de models pour le CI/CD test
 
 # Assurez-vous que le dossier models est inclus même s'il est vide
 !models/.gitkeep
