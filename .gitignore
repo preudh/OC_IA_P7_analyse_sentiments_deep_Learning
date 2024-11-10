@@ -42,8 +42,9 @@ logs/
 
 # on garde tous les fichiers de models pour le CI/CD test
 
-# Assurez-vous que le dossier models est inclus même s'il est vide
-!models/.gitkeep
+# Inclure tous les fichiers du dossier models pour le CI/CD
+!models/*
+
 
 
 # Exclure les notebooks pour alléger le dépôt
