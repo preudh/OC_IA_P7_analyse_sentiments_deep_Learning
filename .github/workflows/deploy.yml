@@ -115,7 +115,7 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'my-azure-app'
+          app-name: 'P7-myapp-deploy'
           images: 'myappregistry1.azurecr.io/my-app:latest'
 
 
