@@ -65,6 +65,8 @@ jobs:
         with:
           app-name: 'P7-myapp-deploy'
           images: 'myappregistry1.azurecr.io/my-app:latest'
+          #
+
 
 
 
