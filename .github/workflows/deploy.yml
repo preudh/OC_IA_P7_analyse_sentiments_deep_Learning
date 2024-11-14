@@ -43,7 +43,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Log in to Azure Container Registry
-        uses: azure/docker-login@v1
+        uses: azure/docker-login@v2  # Mise à jour de la version de l'action pour la dernière version
         with:
           login-server: myappregistry1.azurecr.io
           username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
@@ -64,7 +64,7 @@ jobs:
         with:
           app-name: 'P7-myapp-deploy'
           images: 'myappregistry1.azurecr.io/my-app:latest'
-# End of snippet
+
 
 
 
