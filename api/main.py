@@ -5,7 +5,6 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 import uvicorn
-import webbrowser
 
 # Chemin vers le modèle décompressé
 model_path = os.path.join("/app", "models", "best_model_fasttext.keras")
@@ -78,11 +77,13 @@ async def feedback(input: FeedbackInput):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# Exécuter l'API localement si le script est exécuté directement
+# Exécuter l'API
 if __name__ == "__main__":
-    # Ouvrir la documentation dans le navigateur
-    webbrowser.open("http://127.0.0.1:8000/docs")
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    # Déterminer le port à utiliser
+    port = int(os.getenv("PORT", 8000))  # Azure fournit le port via la variable d'environnement PORT
+    # Lancer l'application
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
+
 
 
 
