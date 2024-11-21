@@ -4,7 +4,18 @@ import tensorflow as tf
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
+from opencensus.ext.azure.log_exporter import AzureLogHandler
+import logging
 import uvicorn
+
+# Configuration d'Application Insights
+# Clé d'instrumentation à obtenir depuis le portail Azure pour ta ressource Application Insights
+instrumentation_key = os.getenv("APPINSIGHTS_INSTRUMENTATIONKEY", "Your_Instrumentation_Key_Here")
+
+# Configurer un logger pour envoyer des logs à Application Insights
+logger = logging.getLogger(__name__)
+logger.addHandler(AzureLogHandler(connection_string=f'InstrumentationKey={instrumentation_key}'))
+logger.setLevel(logging.INFO)  # Définir le niveau de log pour enregistrer des informations utiles
 
 # Chemin vers le modèle décompressé
 model_path = os.path.join("/app", "models", "best_model_fasttext.keras")
@@ -61,20 +72,23 @@ async def predict(input: TextInput):
         # Prédire le sentiment
         prediction = model.predict(sequences)
         sentiment = "positive" if prediction[0][0] > 0.5 else "negative"
+        logger.info(f"Prediction: {sentiment} for text: {input.text}")  # Enregistrer chaque prédiction
         return {"prediction": sentiment}
     except Exception as e:
+        logger.error(f"Error during prediction: {str(e)}")  # Enregistrer l'erreur
         raise HTTPException(status_code=500, detail=str(e))
 
-# Point de terminaison pour le feedback
+# Point de terminaison pour le feedback utilisateur
 @app.post("/feedback")
 async def feedback(input: FeedbackInput):
     try:
         # Traiter le retour utilisateur
         if not input.validation:
-            # Enregistrer ou traiter le feedback négatif si nécessaire
-            print(f"Negative feedback received: {input.text}, Prediction: {input.prediction}")
+            # Enregistrer les tweets mal prédits
+            logger.warning(f"Mal Predicted Tweet: {input.text}, Prediction: {input.prediction}")
         return {"message": "Feedback received, thank you!"}
     except Exception as e:
+        logger.error(f"Error during feedback processing: {str(e)}")  # Enregistrer l'erreur
         raise HTTPException(status_code=500, detail=str(e))
 
 # Exécuter l'API
@@ -83,6 +97,7 @@ if __name__ == "__main__":
     port = int(os.getenv("PORT", 8000))  # Azure fournit le port via la variable d'environnement PORT
     # Lancer l'application
     uvicorn.run("main:app", host="0.0.0.0", port=port)
+
 
 
 
