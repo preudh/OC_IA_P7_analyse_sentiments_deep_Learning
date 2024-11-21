@@ -1,4 +1,22 @@
+#version: '3.11'
+#services:
+#  app:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8000:8000"
+#    volumes:
+#      # Monter uniquement les dossiers et fichiers nécessaires
+#      - ./api:/app/api   # Monter uniquement le dossier 'api' avec le code de l'application
+#      - ./models:/app/models  # Monter le dossier 'models' pour charger les modèles nécessaires
+#      - ./requirements.txt:/app/requirements.txt  # Monter le fichier requirements si nécessaire
+#    environment:
+#      - ENVIRONMENT=development
+#    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+
 version: '3.11'
+
 services:
   app:
     build:
@@ -13,5 +31,6 @@ services:
       - ./requirements.txt:/app/requirements.txt  # Monter le fichier requirements si nécessaire
     environment:
       - ENVIRONMENT=development
+      - APPINSIGHTS_INSTRUMENTATIONKEY=${APPINSIGHTS_INSTRUMENTATIONKEY}  # Ajout de la clé d'instrumentation pour le développement
     command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
 

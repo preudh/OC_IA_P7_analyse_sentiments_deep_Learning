@@ -11,6 +11,26 @@
 #      - ENVIRONMENT=test
 #    command: pytest api/test_api.py
 
+#version: '3.11'
+#
+#services:
+#  app:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    volumes:
+#      - ./models:/app/models  # Monte le dossier "models" dans /app/models
+#    environment:
+#      - ENVIRONMENT=test      # Variable d'environnement pour distinguer l'environnement de test
+#      - PORT=8000             # Définit le port sur lequel l'application écoutera (simule Azure)
+#    ports:
+#      - "8000:80"             # Mappe le port 80 dans le conteneur sur le port 8000 de l'hôte
+#    command: >
+#      sh -c "
+#      uvicorn api.main:app --host 0.0.0.0 --port ${PORT} &
+#      sleep 5 &&
+#      pytest api/test_api.py
+      "
 version: '3.11'
 
 services:
@@ -21,16 +41,16 @@ services:
     volumes:
       - ./models:/app/models  # Monte le dossier "models" dans /app/models
     environment:
-      - ENVIRONMENT=test      # Variable d'environnement pour distinguer l'environnement de test
-      - PORT=8000             # Définit le port sur lequel l'application écoutera (simule Azure)
+      - ENVIRONMENT=test          # Variable d'environnement pour distinguer l'environnement de test
+      - PORT=8000                 # Définit le port sur lequel l'application écoutera (simule Azure)
+      - APPINSIGHTS_INSTRUMENTATIONKEY=${APPINSIGHTS_INSTRUMENTATIONKEY}  # Transmettre la clé d'instrumentation au conteneur
     ports:
-      - "8000:80"             # Mappe le port 80 dans le conteneur sur le port 8000 de l'hôte
+      - "8000:80"                 # Mappe le port 80 dans le conteneur sur le port 8000 de l'hôte
     command: >
       sh -c "
       uvicorn api.main:app --host 0.0.0.0 --port ${PORT} &
       sleep 5 &&
-      pytest api/test_api.py
-      "
+      pytest api/test_api.py"
 
 
 
