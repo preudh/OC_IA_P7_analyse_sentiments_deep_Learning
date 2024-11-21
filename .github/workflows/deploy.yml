@@ -29,6 +29,8 @@ jobs:
       - name: Run Tests
         run: |
           docker-compose -f docker-compose.ci.yml up --build --exit-code-from app
+        env:
+          APPINSIGHTS_INSTRUMENTATIONKEY: ${{ secrets.APPINSIGHTS_INSTRUMENTATIONKEY }}
 
   # Job de construction et déploiement
   build-and-deploy:
@@ -40,7 +42,7 @@ jobs:
       # Étape 1 : Checkout du code
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       # Étape 2 : Connexion à Azure via Azure CLI
       - name: Login via Azure CLI
         uses: azure/login@v1
@@ -60,6 +62,8 @@ jobs:
         run: |
           docker build . -t myappregistry1.azurecr.io/my-app:${{ github.sha }}
           docker push myappregistry1.azurecr.io/my-app:${{ github.sha }}
+        env:
+          APPINSIGHTS_INSTRUMENTATIONKEY: ${{ secrets.APPINSIGHTS_INSTRUMENTATIONKEY }}
 
       # Étape 5 : Déploiement de l'image Docker sur Azure App Service
       - name: Deploy to Azure Web App
@@ -68,6 +72,8 @@ jobs:
           app-name: 'P7-myapp-deploy'
           images: 'myappregistry1.azurecr.io/my-app:${{ github.sha }}'
           slot-name: 'production'
+        env:
+          APPINSIGHTS_INSTRUMENTATIONKEY: ${{ secrets.APPINSIGHTS_INSTRUMENTATIONKEY }}
 
       # Étape 6 : Déconnexion d'Azure
       - name: Azure logout
