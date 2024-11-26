@@ -47,3 +47,6 @@ Ici on crée un conteneur Docker pour l'API FastAPI et on déploie l'API sur Azu
 creation compte Azure free
 creation du service principal
 définir les secrets dans les paramètres du dépôt GitHub.
+
+**Lancer Mlflow en local**
+run fichier "launch_mlflow.py" puis adresse http://127.0.0.1:5000
