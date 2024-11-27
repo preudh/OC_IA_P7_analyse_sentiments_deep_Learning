@@ -1,4 +1,4 @@
-# Réalisez une Analyse de Sentiments avec le Deep Learning et le MLOps
+# Réalisez une Analyse de Sentiments avec le Deep Learning et le MLOps (patrice_preudhomme P7 OC IA)
 
 Bienvenue dans ce projet d’analyse de sentiments basé sur le Deep Learning et les pratiques MLOps. Ce dépôt GitHub présente toutes les étapes nécessaires pour développer, déployer, et maintenir des modèles de prédiction de sentiments à partir de données textuelles.
 
