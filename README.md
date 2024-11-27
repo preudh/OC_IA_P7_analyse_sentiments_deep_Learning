@@ -22,7 +22,8 @@ Vous êtes ingénieur IA chez MIC (Marketing Intelligence Consulting), une entre
    - Évaluation et optimisation des modèles.
 2. MLOps :
    - Suivi des expérimentations avec MLFlow.
-   - Automatisation des pipelines CI/CD.
+   - Automatisation des pipelines CI/CD avec github actions.
+   - Utilisation de Docker pour la conteneurisation (workflow dev, CI, prod).
    - Surveillance en production avec Azure Application Insights.
 3. Déploiement Cloud :
    - Création et déploiement d'une API FastAPI sur Azure Web App.
@@ -66,6 +67,11 @@ Trois approches ont été testées :
 1. Modèle simple : Régression logistique.
 2. Modèle avancé : Utilisation d’embeddings (FastText, GloVe).
 3. Modèle pré-entraîné : BERT.
+
+
+### MLFlow et Expérimentations
+run le fichier Launch_mlflow.py pour lancer le serveur MLFlow
+puis pour visualiser les résultats des expérimentations, ouvrez un navigateur web et allez à l'adresse suivante : http://localhost:5000
 
 
 ### Déploiement et Monitoring
